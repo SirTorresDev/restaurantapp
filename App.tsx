@@ -1,45 +1,75 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { PaperProvider } from 'react-native-paper';
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import NuevaOrden from './views/NuevaOrden';
+import Menu from './views/Menu';
+import DetallePlatillo from './views/DetallePlatillo';
+import FormularioPlatillo from './views/FormularioPlatillo';
+import ResumenPedido from './views/ResumenPedido';
+import ProgresoPedido from './views/ProgresoPedido';
+import BotonResumen from './components/ui/BotonResumen';
+
+// Importar el state del context
+import FirebaseState from './context/firebase/firebaseState';
+import PedidosState from './context/pedidos/pedidosState';
+
+const Stack = createStackNavigator();
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
+    <PaperProvider>
+      <FirebaseState>
+        <PedidosState>
+          <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: '#FFDA00',
+              },
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              headerTintColor: '#000',
+            }}
+          >
+            <Stack.Screen
+              name="NuevaOrden"
+              component={NuevaOrden}
+              options={{ title: 'Nueva Orden' }}
+            />
+            <Stack.Screen
+              name="Menu"
+              component={Menu}
+              options={{ title: 'Nuestro Menu', headerRight: () => <BotonResumen /> }}
+            />
+            <Stack.Screen
+              name="DetallePlatillo"
+              component={DetallePlatillo}
+              options={{ title: 'Formulario Platillo' }}
+            />
+            <Stack.Screen
+              name="FormularioPlatillo"
+              component={FormularioPlatillo}
+              options={{ title: 'Formulario Platillo' }}
+            />
+            <Stack.Screen
+              name="ResumenPedido"
+              component={ResumenPedido}
+              options={{ title: 'Resumen Pedido' }}
+            />
+            <Stack.Screen
+              name="ProgresoPedido"
+              component={ProgresoPedido}
+              options={{ title: 'Progreso Pedido' }}
+            />
+          </Stack.Navigator>
+          </NavigationContainer>
+        </PedidosState>
+      </FirebaseState>
+    </PaperProvider>
   );
 }
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
